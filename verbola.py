@@ -1,16 +1,20 @@
 import os
 import time
+from dotenv import load_dotenv
+
 import json
 import requests
 from pydub import AudioSegment
 from pydub.generators import Silence
 
-# ==== CONFIG ====
-VOICEMAKER_API_KEY = "YOUR_API_KEY_HERE"
-VOICEMAKER_API_URL = "https://developer.voicemaker.in/voice/api"
+load_dotenv()
 
-ENGLISH_VOICE = "en-US-JennyNeural"
-BOSNIAN_VOICE = "bs-BA-AdisNeural"  # Use appropriate Bosnian voice if available
+# ==== CONFIG ====
+VOICEMAKER_API_KEY = os.getenv("VOICEMAKER_API_KEY")
+VOICEMAKER_API_URL = os.getenv("VOICEMAKER_API_URL")
+PRIMARY_VOICE = os.getenv("PRIMARY_VOICE")
+TRANSLATION_VOICE = os.getenv("TRANSLATION_VOICE")
+
 AUDIO_DIR = "audio_output"
 JSON_FILE = "words.json"
 
@@ -64,9 +68,9 @@ def main():
         eng_file = os.path.join(AUDIO_DIR, f"{i:03d}_en.mp3")
         bos_file = os.path.join(AUDIO_DIR, f"{i:03d}_bs.mp3")
 
-        generate_audio(english_word, ENGLISH_VOICE, eng_file)
-        time.sleep(1)  # Short delay
-        generate_audio(bosnian_word, BOSNIAN_VOICE, bos_file)
+        o(english_word, PRIMARY_VOICE, eng_file)
+        time.sleep(1)  #  delay
+        generate_audio(bosnian_word, TRANSLATION_VOICE, bos_file)
         time.sleep(1)
 
         english_audio_files.append(add_silence(eng_file))
